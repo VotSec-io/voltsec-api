@@ -16,10 +16,4 @@ Founder of voltsec - Prasant Goel
 
 # Chaliye suru krte hai kheala
 # Import of all modules.
-
-
-
-
-# This function will contain all the scan modules available in modules and scan for venerabilities and return the results
-async def scanModules(param):
-    return print(param) 
+# kya matlab yaha koi code nahi hai..., haa be ye to class file hai.
