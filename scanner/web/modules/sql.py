@@ -2,7 +2,6 @@ import urllib
 import requests
 import re
 import urllib.parse
-import asyncio
 from pydantic import BaseModel
 
 class Vernabilities(BaseModel):
@@ -10,8 +9,6 @@ class Vernabilities(BaseModel):
       description: str
       level: str
       remeditation: str
-
-
 
 async def checkSqlInjection(url: str) -> bool:
     sqlPayloads = [

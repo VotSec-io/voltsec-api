@@ -1,4 +1,6 @@
 import requests
+import urllib
+import urllib.parse
 import re
 
 
@@ -6,14 +8,13 @@ import re
 # groSS!! worst moment
 
 
-def check_directory_traversal(url: str) -> bool:
+async def check_directory_traversal(url: str) -> bool:
     traversal_payloads = [
         '../../../../etc/passwd', '..%2F..%2F..%2F..%2Fetc%2Fpasswd'
     ]
-    
     for payload in traversal_payloads:
         try:
-            response = requests.get(url + payload)
+            response = requests.get(url)
             if re.search(r'root:', response.text):
                 return True
         except requests.exceptions.RequestException:

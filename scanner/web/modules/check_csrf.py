@@ -9,7 +9,7 @@ import requests
 
 async def check_csrf(url: str) -> bool:
     try:
-        response = await requests.get(url=url, cookies={'withCredentials': 'true'})
+        response = requests.get(url=url, cookies={'withCredentials': 'true'})
         has_csrf_token = (re.search(r'<input[^>]+name=["\']?_csrf["\']?', response.text, re.IGNORECASE) or
                           re.search(r'<meta[^>]+name=["\']?_csrf["\']?', response.text, re.IGNORECASE) or
                           re.search(r'<meta[^>]+name=["\']?csrf-token["\']?', response.text, re.IGNORECASE))

@@ -1,6 +1,6 @@
 import requests
 
-def check_open_redirect(url: str) -> bool:
+async def check_open_redirect(url: str) -> bool:
     open_redirect_payloads = [
         'http://evil.com', 'https://evil.com', '//evil.com'
     ]

@@ -1,25 +1,35 @@
-import re
-import urllib
-import asyncio
-import requests
-import urllib.parse
-
 # kabhi kabhi dil me khayal aata hai.. na jane kya rakha hai duniya dari me, ladki me...
 # kas ye khayal hilane ke phele aa jata.
 
+import re
+import urllib.parse
+import requests
+
 async def checkXXS(url: str) -> bool:
-    xxs = [
+    xss_payloads = [
         "<script>alert('XSS')</script>", 
         "<img src='x' onerror='alert(1)'>", 
         "<svg onload='alert(1)'>"
     ]
-    for check in xxs:
-        response = requests.get(url=url + urllib.parse.quote(check))
+    
+    # Check each XSS payload
+    for payload in xss_payloads:
+        # Encode the payload properly
+        encoded_payload = urllib.parse.quote(payload)
+        full_url = urllib.parse.urljoin(url, encoded_payload)
+
         try:
-            if re.search(re.escape(check), response):
+            # Send the request to the server
+            response = requests.get(full_url)
+            
+            # Check if the payload is reflected in the response body
+            if response.status_code == 200 and re.search(re.escape(payload), response.text):
                 return True
-        except:
+
+        except requests.exceptions.RequestException as e:
+            print(f"Error during request: {e}")
             continue
+    
     return False
 
 
