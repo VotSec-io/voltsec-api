@@ -4,7 +4,7 @@ from typing import Union
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from web.scanner import scanModules
+from scanner.web.scanner import scanModules
 app = FastAPI()
 port = 8080
 
@@ -24,7 +24,7 @@ async def lightScan(item: Requirements):
         return {"response": "please provide mode"}
     if mode == "light":
         scan = await scanModules(item_dict["url"])
-        return [scan]
+        return scan
     if mode != "light":
         return [{"response": "Other modes are on development!"}]
 

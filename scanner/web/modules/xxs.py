@@ -4,6 +4,14 @@
 import re
 import urllib.parse
 import requests
+from scanner.web.schema import Schema
+
+results_xxs = Schema(
+    name= "Cross-Site Scripting (XSS)",
+    description= "XSS vulnerabilities allow an attacker to inject malicious scripts into web pages viewed by other users.",
+    level= "Medium",
+    remediation= "Escape user input and use Content Security Policy (CSP) to prevent XSS attacks."
+)
 
 async def checkXXS(url: str) -> bool:
     xss_payloads = [

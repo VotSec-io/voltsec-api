@@ -2,13 +2,15 @@ import urllib
 import requests
 import re
 import urllib.parse
-from pydantic import BaseModel
+from scanner.web.schema import Schema
 
-class Vernabilities(BaseModel):
-      name: str
-      description: str
-      level: str
-      remeditation: str
+results_sql = Schema(
+     name= "SQL Injection",
+    description= "SQL Injection vulnerabilities allow an attacker to interfere with the queries that an application makes to its database.",
+    level= "High",
+    remediation= "Use prepared statements and parameterized queries to prevent SQL injection attacks."
+)
+
 
 async def checkSqlInjection(url: str) -> bool:
     sqlPayloads = [
