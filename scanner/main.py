@@ -4,7 +4,7 @@ from typing import Union
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from scanner.web.scanner import scanModules
+from scanner.web.lightScan.scanner import scanModules
 app = FastAPI()
 port = 8080
 
