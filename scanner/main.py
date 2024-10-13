@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 from scanner.web.lightScan.scanner import scanModules
+from scanner.web.balancedScan.scanner import scanBalanced
 app = FastAPI()
 port = 8080
 
@@ -14,7 +15,7 @@ class Requirements(BaseModel):
 
 
 @app.post("/scanner")
-async def lightScan(item: Requirements):
+async def MainScanner(item: Requirements):
     item_dict = item.model_dump()
     url = item_dict["url"].lower()
     mode = item_dict['mode'].lower()
@@ -23,10 +24,17 @@ async def lightScan(item: Requirements):
     if item_dict['mode'] == "":
         return {"response": "please provide mode"}
     if mode == "light":
-        scan = await scanModules(item_dict["url"])
+        scan = await scanModules(url)
         return scan
-    if mode != "light":
-        return [{"response": "Other modes are on development!"}]
+
+    if mode == "balanced":
+        light = await scanModules(url)
+        balanced = await scanBalanced(url)
+        combined = light + balanced
+        return combined
+
+    if mode != "light" or mode!="balanced":
+        return [{"response": "Mode not found."}]
 
 
 if __name__ == "__main__":

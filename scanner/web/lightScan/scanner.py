@@ -21,9 +21,9 @@ async def scanModules(param: str):
     open_redirect = await check_open_redirect(url=param)
     directory_traversal = await check_directory_traversal(url=param)
     xxs = await checkXXS(url=param)
-    http_override = check_http_override(url=param)
-    server_check = server_reveal_check(url=param)
-    cache = cache_check(url=param)
+    http_override = await check_http_override(url=param)
+    server_check = await server_reveal_check(url=param)
+    cache = await cache_check(url=param)
     security_headers = await check_security_headers(url=param)
 
     if sql:
