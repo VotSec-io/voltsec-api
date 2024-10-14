@@ -2,3 +2,4 @@ fastapi
 fastapi[standard]
 uvicorn
 requests
+python3-nmap

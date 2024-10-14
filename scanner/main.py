@@ -6,6 +6,9 @@ from pydantic import BaseModel
 
 from scanner.web.lightScan.scanner import scanModules
 from scanner.web.balancedScan.scanner import scanBalanced
+
+from scanner.network.scanner import NetworkScanner, n_map
+
 app = FastAPI()
 port = 8080
 
@@ -15,7 +18,7 @@ class Requirements(BaseModel):
 
 
 @app.post("/scanner")
-async def MainScanner(item: Requirements):
+async def WebScanner(item: Requirements):
     item_dict = item.model_dump()
     url = item_dict["url"].lower()
     mode = item_dict['mode'].lower()
@@ -33,8 +36,31 @@ async def MainScanner(item: Requirements):
         combined = light + balanced
         return combined
 
-    if mode != "light" or mode!="balanced":
+    if mode == "deep":
+        light = await scanModules(url)
+        balanced = await scanBalanced(url)
+        
+        main = light + balanced
+        return main
+
+    if mode != "light" or mode!="balanced" or mode!="deep":
         return [{"response": "Mode not found."}]
+
+
+@app.post("/networkScan")
+async def NetworkScan(item: Requirements):
+    req_item = item.model_dump()
+    mode = req_item["mode"].lower()
+    url = req_item["url"].lower()
+    if req_item['url'] == "":
+        return {"response": "Please provide, URL!"}
+    if req_item['mode'] == "":
+        return {"response": "please provide mode"}
+    
+    destructure = url.split("//")[-1:]
+    scan = await NetworkScanner(param=destructure)
+    return scan
+
 
 
 if __name__ == "__main__":
