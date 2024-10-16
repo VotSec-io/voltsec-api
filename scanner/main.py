@@ -56,7 +56,6 @@ async def NetworkScan(item: Requirements):
         return {"response": "Please provide, URL!"}
     if req_item['mode'] == "":
         return {"response": "please provide mode"}
-    
     destructure = url.split("//")[-1:]
     scan = await NetworkScanner(param=destructure[0])
     return scan
