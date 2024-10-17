@@ -2,14 +2,31 @@ import asyncio
 import uvicorn
 from typing import Union
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from scanner.web.lightScan.scanner import scanModules
 from scanner.web.balancedScan.scanner import scanBalanced
-
 from scanner.network.scanner import NetworkScanner, n_map
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",
+    "https://voltsec-io-main.vercel.app",
+    "https://voltsec-io.com",
+]
+
+# Add CORS middleware to the FastAPI app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # List of allowed origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers (Authorization, Content-Type, etc.)
+)
+
+
 port = 8080
 
 class Requirements(BaseModel):
