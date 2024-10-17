@@ -33,6 +33,14 @@ class Requirements(BaseModel):
     url: str
     mode: str
 
+def remove_duplicates(vulnerabilities):
+    seen = set()
+    unique_vulnerabilities = []
+    for vuln in vulnerabilities:
+        if vuln["name"] not in seen:
+            unique_vulnerabilities.append(vuln)
+            seen.add(vuln["name"])
+    return unique_vulnerabilities
 
 @app.post("/scanner")
 async def WebScanner(item: Requirements):
@@ -51,14 +59,16 @@ async def WebScanner(item: Requirements):
         light = await scanModules(url)
         balanced = await scanBalanced(url)
         combined = light + balanced
-        return combined
+        results = remove_duplicates(combined)
+        return results
 
     if mode == "deep":
         light = await scanModules(url)
         balanced = await scanBalanced(url)
-        
         main = light + balanced
-        return main
+        results = remove_duplicates(main)
+        return results
+
 
     if mode != "light" or mode!="balanced" or mode!="deep":
         return [{"response": "Mode not found."}]
@@ -66,6 +76,8 @@ async def WebScanner(item: Requirements):
 
 @app.post("/networkScan")
 async def NetworkScan(item: Requirements):
+    unique_data = []
+    seen_ips = set()
     req_item = item.model_dump()
     mode = req_item["mode"].lower()
     url = req_item["url"].lower()
@@ -75,7 +87,12 @@ async def NetworkScan(item: Requirements):
         return {"response": "please provide mode"}
     destructure = url.split("//")[-1:]
     scan = await NetworkScanner(param=destructure[0])
-    return scan
+    for item in scan:
+        for ip, details in item.items():
+            if ip not in seen_ips:
+                seen_ips.add(ip)
+                unique_data.append(item)
+    return unique_data
 
 
 

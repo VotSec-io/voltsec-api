@@ -1,5 +1,5 @@
 # Use the official Python image as the base image
-FROM python:3.9-slim
+FROM python:3.13-slim
 
 # Install system dependencies (including Nmap)
 RUN apt-get update && apt-get install -y \
@@ -22,4 +22,4 @@ COPY . .
 EXPOSE 8000
 
 # Command to run the FastAPI application using Uvicorn
-CMD ["fastapi", "run", "scanner/main.py"]
+CMD ["uvicorn", "scanner.main:app", "--host", "0.0.0.0", "--port", "8000"]
