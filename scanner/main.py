@@ -51,18 +51,19 @@ async def WebScanner(item: Requirements):
         return {"response": "Please provide, URL!"}
     if item_dict['mode'] == "":
         return {"response": "please provide mode"}
-    if mode == "light":
+    if mode == "LIGHTSCAN":
         scan = await scanModules(url)
-        return scan
+        results = remove_duplicates(scan)
+        return results
 
-    if mode == "balanced":
+    if mode == "BALANCESCAN":
         light = await scanModules(url)
         balanced = await scanBalanced(url)
         combined = light + balanced
         results = remove_duplicates(combined)
         return results
 
-    if mode == "deep":
+    if mode == "DEEPSCAN":
         light = await scanModules(url)
         balanced = await scanBalanced(url)
         main = light + balanced
@@ -70,7 +71,7 @@ async def WebScanner(item: Requirements):
         return results
 
 
-    if mode != "light" or mode!="balanced" or mode!="deep":
+    if mode != "DEEPSCAN" or mode!="BALANCESCAN" or mode!="LIGHTSCAN":
         return [{"response": "Mode not found."}]
 
 
